@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="Track all your internship and job applications in one place. Update status and monitor your progress on InternHub." />
+    <title>Application Tracker — InternHub</title>
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <style>
+        .tracker-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        @media(max-width:768px) {
+            .tracker-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .ts-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: var(--space-md) var(--space-lg);
+            text-align: center;
+            transition: var(--trans-fast);
+        }
+
+        .ts-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .ts-num {
+            font-size: var(--fs-2xl);
+            font-weight: 800;
+            display: block;
+        }
+
+        .ts-label {
+            font-size: var(--fs-xs);
+            color: var(--text-muted);
+            margin-top: .2rem;
+        }
+
+        .ts-applied .ts-num {
+            color: var(--primary-light);
+        }
+
+        .ts-interview .ts-num {
+            color: #c4b5fd;
+        }
+
+        .ts-offer .ts-num {
+            color: var(--success);
+        }
+
+        .ts-rejected .ts-num {
+            color: #fca5a5;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar-placeholder"></div>
+
+    <!-- Page Header -->
+    <header class="page-header" role="banner">
+        <div class="container">
+            <h1>📊 Application Tracker</h1>
+            <p>Track every job you've applied to — from application to offer.</p>
+        </div>
+    </header>
+
+    <main class="section" role="main" style="padding-top:0">
+        <div class="container">
+
+            <!-- Stats row -->
+            <div class="tracker-stats" role="list" aria-label="Application statistics" id="trackerStats">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- Filter pills -->
+            <div class="tracker-filters" role="group" aria-label="Filter applications by status">
+                <button class="filter-pill active" data-filter="all" aria-pressed="true">All</button>
+                <button class="filter-pill" data-filter="Applied" aria-pressed="false">Applied</button>
+                <button class="filter-pill" data-filter="Interview" aria-pressed="false">Interview</button>
+                <button class="filter-pill" data-filter="Offer" aria-pressed="false">Offer 🎉</button>
+                <button class="filter-pill" data-filter="Rejected" aria-pressed="false">Rejected</button>
+            </div>
+
+            <!-- Applications grid -->
+            <div id="trackerGrid" class="tracker-grid" role="list" aria-live="polite">
+                <!-- Populated by JS -->
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-bottom" style="border-top:none;padding-top:0">
+                <span>© 2026 InternHub. All rights reserved.</span>
+                <span>
+                    <a href="jobs.html" style="color:var(--text-muted)">Browse Jobs</a> ·
+                    <a href="resume.html" style="color:var(--text-muted)">Resume</a>
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let activeFilter = 'all';
+            const grid = document.getElementById('trackerGrid');
+            const statsContainer = document.getElementById('trackerStats');
+
+            // ── Render Stats Row ──────────────────────────
+            function renderStats(apps) {
+                const counts = {
+                    Applied: apps.filter(a => a.status === 'Applied').length,
+                    Interview: apps.filter(a => a.status === 'Interview').length,
+                    Offer: apps.filter(a => a.status === 'Offer').length,
+                    Rejected: apps.filter(a => a.status === 'Rejected').length,
+                };
+                statsContainer.innerHTML = `
+          <div class="ts-card ts-applied" role="listitem">
+            <span class="ts-num">${counts.Applied}</span>
+            <span class="ts-label">📤 Applied</span>
+          </div>
+          <div class="ts-card ts-interview" role="listitem">
+            <span class="ts-num">${counts.Interview}</span>
+            <span class="ts-label">🎤 Interview</span>
+          </div>
+          <div class="ts-card ts-offer" role="listitem">
+            <span class="ts-num">${counts.Offer}</span>
+            <span class="ts-label">🎉 Offers</span>
+          </div>
+          <div class="ts-card ts-rejected" role="listitem">
+            <span class="ts-num">${counts.Rejected}</span>
+            <span class="ts-label">❌ Rejected</span>
+          </div>`;
+            }
+
+            // ── Render Cards ──────────────────────────────
+            function renderCards() {
+                const apps = getApplications();
+                renderStats(apps);
+
+                const filtered = activeFilter === 'all'
+                    ? apps
+                    : apps.filter(a => a.status === activeFilter);
+
+                grid.innerHTML = '';
+
+                if (filtered.length === 0) {
+                    const msg = apps.length === 0
+                        ? '<p>You haven\'t applied to any jobs yet.<br><a href="jobs.html" style="color:var(--primary-light)">Browse Jobs →</a></p>'
+                        : `<p>No applications with status <strong>${activeFilter}</strong>.</p>`;
+                    grid.innerHTML = `
+            <div class="empty-state" style="grid-column:1/-1">
+              <div class="empty-icon">${apps.length === 0 ? '📭' : '🔍'}</div>
+              <h3>${apps.length === 0 ? 'No Applications Yet' : 'No Results'}</h3>
+              ${msg}
+            </div>`;
+                    return;
+                }
+
+                filtered.forEach((app, i) => {
+                    const card = document.createElement('article');
+                    card.className = 'tracker-card animate-slideUp';
+                    card.style.animationDelay = `${i * 0.04}s`;
+                    card.setAttribute('role', 'listitem');
+                    card.setAttribute('aria-label', `Application for ${app.title} at ${app.company}`);
+
+                    const statusClass = {
+                        Applied: 'badge-applied',
+                        Interview: 'badge-interview',
+                        Offer: 'badge-offer',
+                        Rejected: 'badge-rejected'
+                    }[app.status] || 'badge-applied';
+
+                    const statusEmoji = {
+                        Applied: '📤', Interview: '🎤', Offer: '🎉', Rejected: '❌'
+                    }[app.status] || '📤';
+
+                    card.innerHTML = `
+            <div class="tracker-card-header">
+              <div>
+                <h3>${app.title}</h3>
+                <div class="tc-company">🏢 ${app.company}</div>
+              </div>
+              <span class="badge ${statusClass}" aria-label="Status: ${app.status}">${statusEmoji} ${app.status}</span>
+            </div>
+
+            <div style="display:flex;gap:var(--space-md);flex-wrap:wrap;margin-bottom:var(--space-sm)">
+              <span style="font-size:var(--fs-xs);color:var(--text-muted)">📍 ${app.location}</span>
+              <span style="font-size:var(--fs-xs);color:var(--text-muted)">💰 ${app.salary}</span>
+              <span class="badge badge-type" style="font-size:10px;padding:.15rem .5rem">${app.type}</span>
+            </div>
+
+            <div class="tracker-date">📅 Applied on <strong>${app.appliedDate}</strong></div>
+
+            <div style="display:flex;align-items:center;gap:.6rem">
+              <label for="status-${app.id}" style="font-size:var(--fs-xs);color:var(--text-muted);flex-shrink:0">Update Status:</label>
+              <select
+                id="status-${app.id}"
+                class="status-select"
+                data-id="${app.id}"
+                aria-label="Update application status for ${app.title}"
+              >
+                <option value="Applied"   ${app.status === 'Applied' ? 'selected' : ''}>📤 Applied</option>
+                <option value="Interview" ${app.status === 'Interview' ? 'selected' : ''}>🎤 Interview</option>
+                <option value="Offer"     ${app.status === 'Offer' ? 'selected' : ''}>🎉 Offer Received</option>
+                <option value="Rejected"  ${app.status === 'Rejected' ? 'selected' : ''}>❌ Rejected</option>
+              </select>
+            </div>
+
+            <div style="margin-top:var(--space-md);display:flex;gap:.5rem">
+              <a href="job-details.html?id=${app.id}" class="btn btn-ghost btn-sm" style="flex:1;justify-content:center" aria-label="View job details for ${app.title}">👁️ View Job</a>
+              <button class="btn btn-danger btn-sm remove-app-btn" data-id="${app.id}" aria-label="Remove application for ${app.title}">🗑️ Remove</button>
+            </div>`;
+
+                    grid.appendChild(card);
+                });
+
+                // ── Status change listeners ────────────────
+                grid.querySelectorAll('.status-select').forEach(sel => {
+                    sel.addEventListener('change', () => {
+                        const id = Number(sel.dataset.id);
+                        const status = sel.value;
+                        updateApplicationStatus(id, status);
+                        showToast(`Status updated to "${status}"`, 'success', statusEmojiFor(status));
+                        renderCards(); // re-render to update badge colours
+                    });
+                });
+
+                // ── Remove application listeners ──────────
+                grid.querySelectorAll('.remove-app-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const id = Number(btn.dataset.id);
+                        removeApplication(id);
+                        showToast('Application removed.', 'danger', '🗑️');
+                        renderCards();
+                    });
+                });
+            }
+
+            function statusEmojiFor(status) {
+                return { Applied: '📤', Interview: '🎤', Offer: '🎉', Rejected: '❌' }[status] || '📤';
+            }
+
+            // ── Filter pills ──────────────────────────────
+            document.querySelectorAll('.filter-pill').forEach(pill => {
+                pill.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-pill').forEach(p => {
+                        p.classList.remove('active');
+                        p.setAttribute('aria-pressed', 'false');
+                    });
+                    pill.classList.add('active');
+                    pill.setAttribute('aria-pressed', 'true');
+                    activeFilter = pill.dataset.filter;
+                    renderCards();
+                });
+            });
+
+            // ── Initial render ────────────────────────────
+            renderCards();
+        });
+    </script>
+</body>
+
+</html>

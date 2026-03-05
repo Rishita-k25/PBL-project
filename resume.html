@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="Upload and manage your resume on InternHub. Attach your CV to job applications easily." />
+    <title>Resume Upload — InternHub</title>
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <style>
+        .resume-tips {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+        }
+
+        .resume-tips h3 {
+            font-size: var(--fs-md);
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+        }
+
+        .tip-item {
+            display: flex;
+            align-items: flex-start;
+            gap: .6rem;
+            margin-bottom: .75rem;
+            font-size: var(--fs-sm);
+            color: var(--text-secondary);
+        }
+
+        .tip-icon {
+            flex-shrink: 0;
+            font-size: 1rem;
+        }
+
+        .upload-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-xl);
+            align-items: start;
+        }
+
+        @media(max-width:768px) {
+            .upload-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .progress-bar-wrap {
+            background: var(--border);
+            border-radius: var(--radius-full);
+            height: 6px;
+            overflow: hidden;
+            margin-top: .5rem;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--grad-primary);
+            border-radius: var(--radius-full);
+            width: 0;
+            transition: width .4s ease;
+        }
+
+        .progress-bar-wrap.show {
+            display: block;
+        }
+
+        .saved-resume-card {
+            background: rgba(16, 185, 129, .08);
+            border: 1px solid rgba(16, 185, 129, .25);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            animation: slideUp .4s ease;
+        }
+
+        .saved-resume-card h3 {
+            font-size: var(--fs-md);
+            font-weight: 600;
+            color: var(--success);
+            margin-bottom: var(--space-sm);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar-placeholder"></div>
+
+    <!-- Page Header -->
+    <header class="page-header" role="banner">
+        <div class="container">
+            <h1>📄 Resume Manager</h1>
+            <p>Upload your resume, preview it, and keep it ready for any application.</p>
+        </div>
+    </header>
+
+    <main class="section" role="main" style="padding-top:0">
+        <div class="container">
+            <div class="upload-layout">
+
+                <!-- ── Main Upload Area ── -->
+                <div>
+
+                    <!-- Existing resume banner (shown if resume saved) -->
+                    <div id="existingResumeBanner" style="display:none;margin-bottom:var(--space-lg)">
+                        <div class="saved-resume-card">
+                            <h3>✅ Resume on File</h3>
+                            <p id="existingResumeInfo" style="color:var(--text-secondary);font-size:var(--fs-sm)"></p>
+                            <div style="display:flex;gap:.6rem;margin-top:var(--space-md)">
+                                <button class="btn btn-ghost btn-sm" id="replaceResumeBtn">🔄 Replace Resume</button>
+                                <button class="btn btn-danger btn-sm" id="removeResumeBtn">🗑️ Remove Resume</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upload Card -->
+                    <div class="card" id="uploadCard">
+                        <h2 style="font-size:var(--fs-xl);font-weight:700;margin-bottom:var(--space-md)">📤 Upload Your
+                            Resume</h2>
+
+                        <label for="resumeFile" class="upload-area" id="uploadArea">
+                            <span aria-hidden="true" class="upload-icon">📋</span>
+                            <h3>Drag & Drop your resume here</h3>
+                            <p>or click to browse files</p>
+                            <span class="upload-hint">Accepted formats: PDF, DOC, DOCX · Max size: 5 MB</span>
+                            <input type="file" id="resumeFile" name="resume"
+                                accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                aria-label="Upload your resume file" />
+                        </label>
+
+                        <!-- Progress bar -->
+                        <div class="progress-bar-wrap" id="progressWrap">
+                            <div class="progress-bar" id="progressBar"></div>
+                        </div>
+
+                        <!-- Error message -->
+                        <div id="uploadError" class="form-error" role="alert"
+                            style="margin-top:.5rem;font-size:var(--fs-sm)"></div>
+
+                        <!-- Preview -->
+                        <div class="resume-preview" id="resumePreview" role="region" aria-label="Resume preview"
+                            aria-live="polite">
+                            <span class="resume-file-icon" id="previewIcon" aria-hidden="true">📄</span>
+                            <div class="resume-info">
+                                <h4 id="previewName">filename.pdf</h4>
+                                <p id="previewMeta">Size · Type</p>
+                            </div>
+                            <button class="btn btn-ghost btn-sm resume-remove" id="clearPreviewBtn"
+                                aria-label="Remove selected file">✕ Remove</button>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button class="btn btn-primary btn-lg" id="uploadSubmitBtn"
+                            style="margin-top:var(--space-md);display:none" aria-label="Save resume to your profile">
+                            💾 Save Resume to Profile
+                        </button>
+                    </div>
+
+                    <!-- After saved: Profile card -->
+                    <div class="card" id="savedSuccessCard"
+                        style="display:none;margin-top:var(--space-md);border-color:rgba(16,185,129,.3)">
+                        <div style="display:flex;align-items:center;gap:var(--space-md)">
+                            <div class="feature-icon icon-green" aria-hidden="true">✅</div>
+                            <div>
+                                <h3 style="font-size:var(--fs-md);font-weight:600">Resume Saved Successfully!</h3>
+                                <p style="color:var(--text-muted);font-size:var(--fs-sm)">Your resume is now attached to
+                                    your profile and ready for applications.</p>
+                            </div>
+                        </div>
+                        <div style="margin-top:var(--space-md);display:flex;gap:.6rem">
+                            <a href="jobs.html" class="btn btn-primary btn-sm">💼 Browse Jobs</a>
+                            <button class="btn btn-ghost btn-sm" id="uploadAnotherBtn">🔄 Upload Another</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Tips Sidebar ── -->
+                <aside>
+                    <div class="resume-tips">
+                        <h3>💡 Resume Tips</h3>
+                        <div class="tip-item">
+                            <span class="tip-icon">📏</span>
+                            <span>Keep your resume to <strong>1–2 pages</strong> maximum for entry-level roles.</span>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">🎯</span>
+                            <span>Tailor your resume for each job. Match keywords from the job description.</span>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">💡</span>
+                            <span>Use <strong>action verbs</strong>: Built, Designed, Implemented, Led, Achieved.</span>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">📊</span>
+                            <span>Quantify achievements: "Reduced load time by 40%" beats vague statements.</span>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">🔤</span>
+                            <span>Use a clean, ATS-friendly font like Arial, Calibri, or Times New Roman.</span>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">✅</span>
+                            <span>Proofread carefully. Even small grammar errors can cost you an interview.</span>
+                        </div>
+                    </div>
+
+                    <!-- Format info -->
+                    <div class="card" style="margin-top:var(--space-lg)">
+                        <h3 style="font-size:var(--fs-md);font-weight:600;margin-bottom:var(--space-sm)">📁 Accepted
+                            Formats</h3>
+                        <div style="display:flex;flex-direction:column;gap:.5rem">
+                            <div
+                                style="display:flex;align-items:center;gap:.5rem;font-size:var(--fs-sm);color:var(--text-secondary)">
+                                <span>📕</span> PDF (Recommended)
+                            </div>
+                            <div
+                                style="display:flex;align-items:center;gap:.5rem;font-size:var(--fs-sm);color:var(--text-secondary)">
+                                <span>📘</span> Microsoft Word (.doc, .docx)
+                            </div>
+                            <div
+                                style="display:flex;align-items:center;gap:.5rem;font-size:var(--fs-sm);color:var(--text-muted)">
+                                <span>⚠️</span> Maximum file size: 5 MB
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-bottom" style="border-top:none;padding-top:0">
+                <span>© 2026 InternHub. All rights reserved.</span>
+                <span>
+                    <a href="jobs.html" style="color:var(--text-muted)">Browse Jobs</a> ·
+                    <a href="tracker.html" style="color:var(--text-muted)">Tracker</a>
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fileInput = document.getElementById('resumeFile');
+            const uploadArea = document.getElementById('uploadArea');
+            const preview = document.getElementById('resumePreview');
+            const previewIcon = document.getElementById('previewIcon');
+            const previewName = document.getElementById('previewName');
+            const previewMeta = document.getElementById('previewMeta');
+            const clearBtn = document.getElementById('clearPreviewBtn');
+            const submitBtn = document.getElementById('uploadSubmitBtn');
+            const errorEl = document.getElementById('uploadError');
+            const progressWrap = document.getElementById('progressWrap');
+            const progressBar = document.getElementById('progressBar');
+            const successCard = document.getElementById('savedSuccessCard');
+            const uploadCard = document.getElementById('uploadCard');
+            const existBanner = document.getElementById('existingResumeBanner');
+            const existInfo = document.getElementById('existingResumeInfo');
+
+            let selectedFile = null;
+
+            // ── Show existing resume if any ──────────────
+            const saved = getResume();
+            if (saved) {
+                existBanner.style.display = 'block';
+                existInfo.textContent = `📄 ${saved.name}  ·  ${formatSize(saved.size)}  ·  Uploaded ${saved.uploadedDate}`;
+            }
+
+            document.getElementById('removeResumeBtn')?.addEventListener('click', () => {
+                removeResume();
+                existBanner.style.display = 'none';
+                showToast('Resume removed from profile.', 'danger', '🗑️');
+            });
+
+            document.getElementById('replaceResumeBtn')?.addEventListener('click', () => {
+                existBanner.style.display = 'none';
+                fileInput.click();
+            });
+
+            document.getElementById('uploadAnotherBtn')?.addEventListener('click', () => {
+                successCard.style.display = 'none';
+                uploadCard.style.display = 'block';
+                reset();
+            });
+
+            // ── Drag and Drop ────────────────────────────
+            uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag-over'); });
+            uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
+            uploadArea.addEventListener('drop', e => {
+                e.preventDefault();
+                uploadArea.classList.remove('drag-over');
+                const file = e.dataTransfer.files[0];
+                if (file) processFile(file);
+            });
+
+            // ── File Input Change ─────────────────────────
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files[0]) processFile(fileInput.files[0]);
+            });
+
+            // ── Validate & Preview ────────────────────────
+            function processFile(file) {
+                const allowed = ['application/pdf', 'application/msword',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                const allowedExt = ['.pdf', '.doc', '.docx'];
+                const ext = '.' + file.name.split('.').pop().toLowerCase();
+
+                errorEl.classList.remove('active');
+                errorEl.textContent = '';
+
+                if (!allowed.includes(file.type) && !allowedExt.includes(ext)) {
+                    errorEl.textContent = '❌ Invalid file type. Please upload a PDF or Word document.';
+                    errorEl.classList.add('active');
+                    return;
+                }
+                if (file.size > 5 * 1024 * 1024) {
+                    errorEl.textContent = `❌ File is too large (${formatSize(file.size)}). Maximum allowed size is 5 MB.`;
+                    errorEl.classList.add('active');
+                    return;
+                }
+
+                selectedFile = file;
+                const isPdf = ext === '.pdf';
+                previewIcon.textContent = isPdf ? '📕' : '📘';
+                previewName.textContent = file.name;
+                previewMeta.textContent = `${formatSize(file.size)}  ·  ${isPdf ? 'PDF Document' : 'Word Document'}`;
+                preview.classList.add('show');
+                submitBtn.style.display = 'flex';
+            }
+
+            // ── Clear preview ─────────────────────────────
+            clearBtn.addEventListener('click', reset);
+            function reset() {
+                selectedFile = null;
+                fileInput.value = '';
+                preview.classList.remove('show');
+                submitBtn.style.display = 'none';
+                progressWrap.classList.remove('show');
+                progressBar.style.width = '0%';
+                errorEl.classList.remove('active');
+            }
+
+            // ── Submit (save to localStorage) ─────────────
+            submitBtn.addEventListener('click', () => {
+                if (!selectedFile) return;
+
+                // Simulate upload progress
+                submitBtn.disabled = true;
+                submitBtn.textContent = '⏳ Uploading...';
+                progressWrap.classList.add('show');
+
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 20;
+                    progressBar.style.width = Math.min(progress, 95) + '%';
+                    if (progress >= 95) {
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            progressBar.style.width = '100%';
+                            setTimeout(() => {
+                                saveResume({
+                                    name: selectedFile.name,
+                                    size: selectedFile.size,
+                                    type: selectedFile.type,
+                                    uploadedDate: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+                                });
+                                uploadCard.style.display = 'none';
+                                successCard.style.display = 'block';
+                                existBanner.style.display = 'none';
+                                showToast('Resume saved successfully! 📄', 'success', '✅');
+                            }, 300);
+                        }, 400);
+                    }
+                }, 150);
+            });
+
+            function formatSize(bytes) {
+                if (bytes < 1024) return bytes + ' B';
+                if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+                return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="InternHub — Find top internships and jobs for students in India. Browse 500+ opportunities from leading companies." />
+  <meta name="keywords" content="internship, jobs, students, India, internhub, career" />
+  <meta name="author" content="InternHub" />
+  <title>InternHub — Find Your Dream Internship</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/components.css" />
+
+  <style>
+    /* ── Testimonials ── */
+    .testimonials { background: var(--bg-card); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+    .testimonials-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-xl); }
+    @media(max-width:768px){ .testimonials-grid{grid-template-columns:1fr;} }
+    .testimonial-card { background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-lg); padding:var(--space-xl); transition:var(--trans-normal); }
+    .testimonial-card:hover { border-color:rgba(79,70,229,.3); transform:translateY(-2px); }
+    .t-stars { color:var(--accent); margin-bottom:.75rem; font-size:1.1rem; }
+    .t-text  { color:var(--text-secondary); font-size:var(--fs-sm); line-height:1.7; margin-bottom:var(--space-md); font-style:italic; }
+    .t-author { display:flex; align-items:center; gap:.75rem; }
+    .t-avatar { width:40px; height:40px; border-radius:50%; background:var(--grad-primary); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+    .t-name  { font-weight:600; font-size:var(--fs-sm); }
+    .t-role  { color:var(--text-muted); font-size:var(--fs-xs); }
+
+    /* ── Companies Marquee ── */
+    .companies-section { padding:var(--space-2xl) 0; overflow:hidden; }
+    .companies-label { text-align:center; font-size:var(--fs-xs); text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); margin-bottom:var(--space-lg); }
+    .marquee-track { display:flex; gap:var(--space-2xl); animation:marquee 25s linear infinite; white-space:nowrap; }
+    .marquee-track:hover { animation-play-state:paused; }
+    .company-logo { font-size:var(--fs-lg); font-weight:700; color:var(--text-muted); padding:.4rem 1.2rem; border:1px solid var(--border); border-radius:var(--radius-md); transition:var(--trans-fast); }
+    .company-logo:hover { color:var(--primary-light); border-color:var(--primary); }
+    @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    /* ── CTA Banner ── */
+    .cta-banner { background:linear-gradient(135deg,rgba(79,70,229,.15) 0%,rgba(6,182,212,.1) 100%); border:1px solid rgba(79,70,229,.2); border-radius:var(--radius-xl); padding:var(--space-3xl) var(--space-xl); text-align:center; }
+    .cta-banner h2 { font-size:var(--fs-3xl); font-weight:800; margin-bottom:var(--space-md); }
+    .cta-banner p  { color:var(--text-secondary); margin-bottom:var(--space-xl); font-size:var(--fs-lg); }
+    .cta-actions   { display:flex; gap:var(--space-md); justify-content:center; flex-wrap:wrap; }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar injected by app.js -->
+  <div id="navbar-placeholder"></div>
+
+  <!-- ════════════════ HERO ════════════════ -->
+  <section class="hero" aria-label="Hero">
+    <div class="hero-grid" aria-hidden="true"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge" role="note">
+          🎯 <span>#1 Student Job Platform in India</span>
+        </div>
+
+        <h1 class="hero-title">
+          Find Your <span class="highlight">Dream Internship</span><br>& Launch Your Career
+        </h1>
+
+        <p class="hero-description">
+          Discover 500+ internships and jobs from India's top companies. Apply in one click, track your applications, and land your first big opportunity.
+        </p>
+
+        <div class="hero-actions">
+          <a href="pages/jobs.html" class="btn btn-primary btn-lg" aria-label="Browse all jobs">
+            💼 Browse Jobs
+          </a>
+          <a href="pages/login.html?tab=register" class="btn btn-outline btn-lg" aria-label="Register for free">
+            🚀 Get Started Free
+          </a>
+        </div>
+
+        <div class="hero-stats" role="list" aria-label="Platform statistics">
+          <div class="hero-stat" role="listitem">
+            <div class="stat-num" id="heroStat1">500+</div>
+            <div class="stat-label">Active Listings</div>
+          </div>
+          <div class="hero-stat" role="listitem">
+            <div class="stat-num" id="heroStat2">200+</div>
+            <div class="stat-label">Top Companies</div>
+          </div>
+          <div class="hero-stat" role="listitem">
+            <div class="stat-num" id="heroStat3">50K+</div>
+            <div class="stat-label">Students Placed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating job cards (decorative) -->
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-card-float">
+          <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.4rem">
+            <span>🚀</span>
+            <div>
+              <h4>Frontend Developer Intern</h4>
+              <p>TechNova Solutions · Bangalore</p>
+            </div>
+          </div>
+          <span class="badge badge-type">Internship</span> &nbsp;
+          <span class="badge badge-salary">₹15,000/mo</span>
+        </div>
+        <div class="hero-card-float" style="margin-left:40px">
+          <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.4rem">
+            <span>🤖</span>
+            <div>
+              <h4>ML Engineer Intern</h4>
+              <p>NeuralPath AI · Bangalore</p>
+            </div>
+          </div>
+          <span class="badge badge-type">Internship</span> &nbsp;
+          <span class="badge badge-salary">₹20,000/mo</span>
+        </div>
+        <div class="hero-card-float">
+          <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.4rem">
+            <span>🏦</span>
+            <div>
+              <h4>FinTech Software Engineer</h4>
+              <p>Razorpay · Bangalore</p>
+            </div>
+          </div>
+          <span class="badge badge-type">Full-time</span> &nbsp;
+          <span class="badge badge-salary">₹12 LPA</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════ COMPANIES MARQUEE ════════════════ -->
+  <section class="companies-section" aria-label="Companies hiring">
+    <div class="companies-label">Opportunities from leading companies</div>
+    <div style="overflow:hidden">
+      <div class="marquee-track" aria-hidden="true">
+        <span class="company-logo">Infosys</span>
+        <span class="company-logo">Wipro</span>
+        <span class="company-logo">TCS</span>
+        <span class="company-logo">Razorpay</span>
+        <span class="company-logo">Zoho</span>
+        <span class="company-logo">Flipkart</span>
+        <span class="company-logo">McKinsey</span>
+        <span class="company-logo">HDFC Bank</span>
+        <span class="company-logo">Tata Research</span>
+        <span class="company-logo">Apollo Health</span>
+        <!-- Duplicate for seamless loop -->
+        <span class="company-logo">Infosys</span>
+        <span class="company-logo">Wipro</span>
+        <span class="company-logo">TCS</span>
+        <span class="company-logo">Razorpay</span>
+        <span class="company-logo">Zoho</span>
+        <span class="company-logo">Flipkart</span>
+        <span class="company-logo">McKinsey</span>
+        <span class="company-logo">HDFC Bank</span>
+        <span class="company-logo">Tata Research</span>
+        <span class="company-logo">Apollo Health</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════ FEATURES ════════════════ -->
+  <section class="section" id="features" aria-labelledby="featuresHeading">
+    <div class="container">
+      <h2 class="section-title" id="featuresHeading">Everything You Need to Succeed</h2>
+      <p class="section-subtitle">A complete career platform built for students, by students</p>
+
+      <div class="features-grid">
+        <article class="feature-card animate-slideUp delay-1">
+          <div class="feature-icon icon-blue" aria-hidden="true">🔍</div>
+          <h3>Smart Job Search</h3>
+          <p>Filter jobs by location, stipend, job type, and skills. Find exactly what you're looking for among hundreds of live listings from top companies.</p>
+        </article>
+
+        <article class="feature-card animate-slideUp delay-2">
+          <div class="feature-icon icon-cyan" aria-hidden="true">📊</div>
+          <h3>Application Tracker</h3>
+          <p>Never lose track of where you applied. Monitor your application status from Applied → Interview → Offer all in one organised dashboard.</p>
+        </article>
+
+        <article class="feature-card animate-slideUp delay-3">
+          <div class="feature-icon icon-amber" aria-hidden="true">⭐</div>
+          <h3>Save Favourites</h3>
+          <p>Bookmark interesting opportunities and revisit them anytime. Your saved jobs sync instantly and are stored securely in your browser.</p>
+        </article>
+
+        <article class="feature-card animate-slideUp delay-1">
+          <div class="feature-icon icon-green" aria-hidden="true">📄</div>
+          <h3>Resume Manager</h3>
+          <p>Upload and manage your resume directly on the platform. Your resume information is stored locally so recruiters always see your latest version.</p>
+        </article>
+
+        <article class="feature-card animate-slideUp delay-2">
+          <div class="feature-icon icon-violet" aria-hidden="true">🔔</div>
+          <h3>Real-time Updates</h3>
+          <p>Get instant feedback on your applications. Update statuses, track interview rounds, and stay on top of every opportunity in real time.</p>
+        </article>
+
+        <article class="feature-card animate-slideUp delay-3">
+          <div class="feature-icon icon-blue" aria-hidden="true">🎓</div>
+          <h3>Student Friendly</h3>
+          <p>Designed specifically for college students and fresh graduates. Filter by stipend range, remote options, and only student-appropriate roles.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════ STATS ════════════════ -->
+  <section class="section stats-section" aria-labelledby="statsHeading">
+    <div class="container">
+      <h2 class="section-title" id="statsHeading">Trusted by Students Across India</h2>
+      <p class="section-subtitle">Our numbers speak louder than words</p>
+      <div class="stats-grid" role="list">
+        <div class="stat-card" role="listitem">
+          <div class="stat-number" data-target="500" id="stat1">0</div>
+          <div class="stat-label">Active Job Listings</div>
+        </div>
+        <div class="stat-card" role="listitem">
+          <div class="stat-number" data-target="200" id="stat2">0</div>
+          <div class="stat-label">Partner Companies</div>
+        </div>
+        <div class="stat-card" role="listitem">
+          <div class="stat-number" data-target="50000" id="stat3">0</div>
+          <div class="stat-label">Students Placed</div>
+        </div>
+        <div class="stat-card" role="listitem">
+          <div class="stat-number" data-target="95" id="stat4">0</div>
+          <div class="stat-label">% Satisfaction Rate</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════ TESTIMONIALS ════════════════ -->
+  <section class="section testimonials" aria-labelledby="testimonialHeading">
+    <div class="container">
+      <h2 class="section-title" id="testimonialHeading">What Students Say</h2>
+      <p class="section-subtitle">Real stories from real students who found their dream roles</p>
+      <div class="testimonials-grid">
+        <article class="testimonial-card">
+          <div class="t-stars" aria-label="5 stars">★★★★★</div>
+          <p class="t-text">"InternHub helped me land a ₹20,000/mo ML internship at NeuralPath within 2 weeks. The filters made it so easy to find relevant roles!"</p>
+          <div class="t-author">
+            <div class="t-avatar" aria-hidden="true">👩</div>
+            <div>
+              <div class="t-name">Priya Sharma</div>
+              <div class="t-role">B.Tech CSE · IIT Delhi</div>
+            </div>
+          </div>
+        </article>
+        <article class="testimonial-card">
+          <div class="t-stars" aria-label="5 stars">★★★★★</div>
+          <p class="t-text">"The application tracker is incredible. I was juggling 8 applications at once and never missed a deadline. Got placed at Razorpay!"</p>
+          <div class="t-author">
+            <div class="t-avatar" aria-hidden="true">👨</div>
+            <div>
+              <div class="t-name">Arjun Mehta</div>
+              <div class="t-role">MCA · VIT Vellore</div>
+            </div>
+          </div>
+        </article>
+        <article class="testimonial-card">
+          <div class="t-stars" aria-label="5 stars">★★★★★</div>
+          <p class="t-text">"Found my dream UX internship at Pixel Studio through InternHub. The design is so clean and the experience is smooth. Highly recommend!"</p>
+          <div class="t-author">
+            <div class="t-avatar" aria-hidden="true">👩</div>
+            <div>
+              <div class="t-name">Sneha Rajan</div>
+              <div class="t-role">B.Des · NID Ahmedabad</div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════ CTA BANNER ════════════════ -->
+  <section class="section" aria-labelledby="ctaHeading">
+    <div class="container">
+      <div class="cta-banner">
+        <h2 id="ctaHeading">Ready to Start Your <span style="background:var(--grad-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Career Journey?</span></h2>
+        <p>Join 50,000+ students who found internships and jobs through InternHub. It's free!</p>
+        <div class="cta-actions">
+          <a href="pages/login.html?tab=register" class="btn btn-primary btn-lg">🚀 Create Free Account</a>
+          <a href="pages/jobs.html" class="btn btn-outline btn-lg">💼 Browse Jobs First</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════ FOOTER ════════════════ -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="nav-logo" href="index.html" aria-label="InternHub Home" style="margin-bottom:.5rem">
+            <div class="logo-icon" aria-hidden="true">🎯</div>
+            <span class="logo-text">InternHub</span>
+          </a>
+          <p>India's leading platform connecting students with top internships and entry-level jobs. Start your career journey today.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="pages/jobs.html">Browse Jobs</a></li>
+            <li><a href="pages/tracker.html">My Applications</a></li>
+            <li><a href="pages/resume.html">Upload Resume</a></li>
+            <li><a href="pages/login.html">Login / Register</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Job Categories</h4>
+          <ul>
+            <li><a href="pages/jobs.html">Technology</a></li>
+            <li><a href="pages/jobs.html">Design</a></li>
+            <li><a href="pages/jobs.html">Marketing</a></li>
+            <li><a href="pages/jobs.html">Finance</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="mailto:support@internhub.in">📧 support@internhub.in</a></li>
+            <li><a href="tel:+911800123456">📞 1800-123-456</a></li>
+            <li><a href="#">📍 Bangalore, India</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 InternHub. All rights reserved.</span>
+        <span>Made with ❤️ for students in India</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // ── Animated counter ──────────────────────────────
+    function animateCounter(el, target, suffix = '') {
+      const duration = 2000;
+      const start    = performance.now();
+      function update(time) {
+        const elapsed  = time - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased    = 1 - Math.pow(1 - progress, 3);
+        const value    = Math.floor(eased * target);
+        el.textContent = value >= 1000
+          ? (value / 1000).toFixed(value >= 10000 ? 0 : 1) + 'K+'
+          : value + (suffix || (progress === 1 && target === 95 ? '%' : '+'));
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    }
+
+    // Trigger once stats are in view
+    const statsObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        animateCounter(document.getElementById('stat1'), 500);
+        animateCounter(document.getElementById('stat2'), 200);
+        animateCounter(document.getElementById('stat3'), 50000);
+        animateCounter(document.getElementById('stat4'), 95, '%');
+        statsObserver.disconnect();
+      }
+    }, { threshold: 0.3 });
+
+    const statsSection = document.querySelector('.stats-section');
+    if (statsSection) statsObserver.observe(statsSection);
+
+    // ── Scroll animation for feature cards ──────────
+    const featureObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.style.opacity = '1';
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.feature-card').forEach(card => {
+      card.style.opacity = '0';
+      featureObserver.observe(card);
+    });
+  </script>
+</body>
+</html>
