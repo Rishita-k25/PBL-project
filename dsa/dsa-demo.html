@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DSA Demo — Smart Job Finder</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0f1117;
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 40px 20px;
+        }
+
+        header {
+            width: 100%;
+            max-width: 820px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        .card {
+            background: #1e2130;
+            border: 1px solid #2d3152;
+            border-radius: 14px;
+            padding: 28px 32px;
+            max-width: 820px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #a78bfa;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .badge {
+            background: #2d3152;
+            border: 1px solid #3b4380;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            color: #c4b5fd;
+        }
+
+        .badge strong {
+            color: #f0abfc;
+        }
+
+        .console-box {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: #7ee787;
+            max-height: 380px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 12px 28px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: none;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: #fff;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 24px;
+            color: #6366f1;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .step-tag {
+            display: inline-block;
+            background: #312e81;
+            color: #c4b5fd;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>🧠 DSA Module — Smart Job Finder</h1>
+        <p>All Data Structure &amp; Algorithm implementations for academic evaluation.</p>
+        <p style="margin-top:6px; color:#64748b; font-size:0.82rem;">Open browser DevTools Console (F12) to see full
+            step-by-step output.</p>
+    </header>
+
+    <!-- DSA Overview Card -->
+    <div class="card">
+        <h2>📦 Implemented DSA Concepts</h2>
+        <div class="badge-grid">
+            <div class="badge"><strong>Arrays</strong> — Job listing, saved &amp; applied lists</div>
+            <div class="badge"><strong>Stack (LIFO)</strong> — Application history &amp; undo</div>
+            <div class="badge"><strong>Queue (FIFO)</strong> — Application processing order</div>
+            <div class="badge"><strong>Linear Search</strong> — Find jobs by keyword</div>
+            <div class="badge"><strong>Binary Search</strong> — Find jobs by exact salary</div>
+            <div class="badge"><strong>Bubble Sort</strong> — Sort jobs by salary</div>
+            <div class="badge"><strong>Selection Sort</strong> — Sort jobs alphabetically</div>
+        </div>
+    </div>
+
+    <!-- File Map Card -->
+    <div class="card">
+        <h2>📁 File Structure</h2>
+        <div class="console-box" id="fileMap">Data-Structures-and-Algorithms/
+            ├── arrays.js ← DSA Concept: Arrays / Lists
+            ├── stackQueue.js ← DSA Concept: Stack (LIFO) + Queue (FIFO)
+            ├── searching.js ← DSA Concept: Linear Search + Binary Search
+            ├── sorting.js ← DSA Concept: Bubble Sort + Selection Sort
+            ├── demo.js ← Demonstration — runs all concepts
+            └── dsa-demo.html ← This page (browser runner)</div>
+    </div>
+
+    <!-- Live Console Output Card -->
+    <div class="card">
+        <h2>🖥️ Live Console Output <span class="step-tag">auto-run on load</span></h2>
+        <p style="color:#64748b; font-size:0.82rem; margin-bottom:12px;">
+            The demo runs automatically when this page loads. Output is captured below AND in DevTools Console.
+        </p>
+        <div class="console-box" id="consoleOutput">Running DSA demo…</div>
+        <button class="btn" onclick="runDemo()">▶ Run Demo Again</button>
+    </div>
+
+    <a class="back-link" href="../index.html">← Back to Job Finder Website</a>
+
+    <!-- ── LOAD DSA MODULES ── -->
+    <script src="arrays.js"></script>
+    <script src="stackQueue.js"></script>
+    <script src="searching.js"></script>
+    <script src="sorting.js"></script>
+
+    <!-- ── CONSOLE CAPTURE ── -->
+    <script>
+        const outputEl = document.getElementById("consoleOutput");
+        const originalLog = console.log.bind(console);
+        const originalWarn = console.warn.bind(console);
+
+        function appendToBox(msg, color) {
+            outputEl.textContent += "\n" + msg;
+            outputEl.scrollTop = outputEl.scrollHeight;
+        }
+
+        console.log = function (...args) {
+            originalLog(...args);
+            appendToBox(args.join(" "), "#7ee787");
+        };
+        console.warn = function (...args) {
+            originalWarn(...args);
+            appendToBox("⚠ " + args.join(" "), "#fbbf24");
+        };
+    </script>
+
+    <!-- ── DEMO SCRIPT (inline, uses window.DSA_* globals) ── -->
+    <script>
+        function runDemo() {
+            outputEl.textContent = ""; // Clear previous output
+
+            // ── 1. ARRAYS ──────────────────────────────────────────
+            console.log("╔══════════════════════════════════════════════════╗");
+            console.log("║   Smart Internship & Job Finder — DSA Demo       ║");
+            console.log("╚══════════════════════════════════════════════════╝");
+            console.log("\n━━━ STEP 1: ARRAYS (Job Listings) ━━━━━━━━━━━━━━━━");
+
+            const A = window.DSA_Arrays;
+            const jobs = A.getAllJobListings();
+
+            console.log("[Arrays] Total jobs loaded: " + jobs.length);
+            console.log("[Arrays] First 3 job listings:");
+            jobs.slice(0, 3).forEach((job, i) =>
+                console.log("  [" + i + "] " + job.title + " @ " + job.company + " — ₹" + job.salary.toLocaleString())
+            );
+
+            // Reset arrays for clean demo run
+            A.savedJobs.length = 0;
+            A.appliedJobs.length = 0;
+
+            A.saveJob(jobs[0]);
+            A.saveJob(jobs[2]);
+            A.saveJob(jobs[0]); // duplicate — rejected
+            console.log("[Arrays] Saved jobs total: " + A.savedJobs.length);
+
+            A.applyToJob(jobs[0]);
+            A.applyToJob(jobs[3]);
+            A.applyToJob(jobs[5]);
+            console.log("[Arrays] Total applications: " + A.appliedJobs.length);
+
+            // ── 2. STACK ────────────────────────────────────────────
+            console.log("\n━━━ STEP 2: STACK — Application History (LIFO) ━━━━");
+
+            const SQ = window.DSA_StackQueue;
+            // Reset stack + queue for clean run
+            SQ.applicationHistory.items = [];
+            SQ.applicationQueue.items = [];
+
+            SQ.recordApplication(jobs[0]);
+            SQ.recordApplication(jobs[1]);
+            SQ.recordApplication(jobs[4]);
+
+            SQ.applicationHistory.display();
+            console.log('[Stack] Peek (most recent): "' + SQ.applicationHistory.peek().title + '"');
+
+            const undone = SQ.undoLastApplication();
+            console.log('[Stack] Undid: "' + undone.title + '". Stack size: ' + SQ.applicationHistory.size());
+            SQ.applicationHistory.display();
+
+            // ── 3. QUEUE ────────────────────────────────────────────
+            console.log("\n━━━ STEP 3: QUEUE — Application Processing (FIFO) ━");
+            SQ.applicationQueue.display();
+            console.log("\n[Queue] Processing applications in order...");
+            SQ.processNextApplication();
+            SQ.processNextApplication();
+            console.log("[Queue] Remaining: " + SQ.applicationQueue.size());
+            SQ.applicationQueue.display();
+
+            // ── 4. SEARCHING ────────────────────────────────────────
+            console.log("\n━━━ STEP 4: SEARCHING ALGORITHMS ━━━━━━━━━━━━━━━━━");
+            const Search = window.DSA_Searching;
+            const Sorting = window.DSA_Sorting;
+
+            const devJobs = Search.linearSearch(jobs, "developer");
+            console.log("[LinearSearch] 'developer' results: " + devJobs.length);
+
+            const sortedForBin = Sorting.bubbleSortBySalary(jobs, "asc");
+            const idx = Search.binarySearchBySalary(sortedForBin, 20000);
+            if (idx !== -1) {
+                console.log('[BinarySearch] Found "' + sortedForBin[idx].title + '" at index ' + idx);
+            }
+
+            const inRange = Search.binarySearchRange(sortedForBin, 10000, 20000);
+            console.log("[BinarySearch Range] ₹10k–₹20k jobs: " + inRange.length);
+
+            // ── 5. SORTING ──────────────────────────────────────────
+            console.log("\n━━━ STEP 5: SORTING ALGORITHMS ━━━━━━━━━━━━━━━━━━━");
+            const asc = Sorting.bubbleSortBySalary(jobs, "asc");
+            console.log("[BubbleSort ASC] Lowest: ₹" + asc[0].salary);
+            const desc = Sorting.bubbleSortBySalary(jobs, "desc");
+            console.log("[BubbleSort DESC] Highest: ₹" + desc[0].salary);
+            const alpha = Sorting.selectionSortByTitle(jobs);
+            console.log("[SelectionSort] First alpha: " + alpha[0].title);
+
+            // ── SUMMARY ─────────────────────────────────────────────
+            console.log("\n╔══════════════════════════════════════════════════╗");
+            console.log("║            DSA DEMO COMPLETE ✓                   ║");
+            console.log("╠══════════════════════════════════════════════════╣");
+            console.log("║  1. Arrays  — collections of job data            ║");
+            console.log("║  2. Stack   — LIFO application history + undo    ║");
+            console.log("║  3. Queue   — FIFO application processing        ║");
+            console.log("║  4. Search  — Linear (keyword) + Binary (salary) ║");
+            console.log("║  5. Sort    — Bubble (salary) + Selection (title)║");
+            console.log("╚══════════════════════════════════════════════════╝");
+        }
+
+        // Auto-run on page load
+        window.addEventListener("load", runDemo);
+    </script>
+</body>
+
+</html>
